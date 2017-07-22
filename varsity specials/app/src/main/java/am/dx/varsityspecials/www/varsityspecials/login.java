@@ -1,9 +1,11 @@
 package am.dx.varsityspecials.www.varsityspecials;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -44,6 +46,12 @@ public class login extends AppCompatActivity {
 
 
     }
+    public void onSignUp(View view)
+    {
+
+        Intent in = new Intent(login.this,signUp.class);
+        startActivity(in);
+    }
 
     @Override
     public void onStart() {
@@ -58,6 +66,13 @@ public class login extends AppCompatActivity {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+    public void toast(String t)
+    {
+        Toast output= Toast.makeText(this, t, Toast.LENGTH_SHORT);
+        output.setGravity(Gravity.CENTER,0,0);
+        output.show();
+    }
+
 
     public void onLogin(View view)
     {
@@ -77,14 +92,14 @@ public class login extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             Log.w("test", "signInWithEmail", task.getException());
 
-                            Toast.makeText(login.this, "Login Error", Toast.LENGTH_SHORT).show();
+                           toast("Login Error");
 
                         }
                         else
                         {
                             Log.w("test", "signInWithEmail", task.getException());
 
-                            Toast.makeText(login.this, "Login Successful", Toast.LENGTH_SHORT).show();
+                            toast("Login Successful");
 
                         }
 

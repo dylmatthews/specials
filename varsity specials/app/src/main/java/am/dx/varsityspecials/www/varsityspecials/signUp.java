@@ -1,5 +1,6 @@
 package am.dx.varsityspecials.www.varsityspecials;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -81,6 +82,8 @@ public class signUp extends AppCompatActivity {
                                 toast("Sign Up failed");
                             } else {
                                toast("Sign Up Successful");
+                                Intent in = new Intent(signUp.this,login.class);
+                                startActivity(in);
 
                             }
 

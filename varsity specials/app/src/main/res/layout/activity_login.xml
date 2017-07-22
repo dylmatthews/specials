@@ -56,6 +56,15 @@
 
 </android.support.design.widget.TextInputLayout>
 
+    <Button
+        android:text="Sign Up"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/btnSignUp"
+        android:layout_alignParentEnd="true"
+        android:onClick="onSignUp" />
 
 
 </RelativeLayout>
