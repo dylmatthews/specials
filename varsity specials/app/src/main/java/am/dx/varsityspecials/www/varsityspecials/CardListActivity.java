@@ -18,7 +18,7 @@ public class CardListActivity extends Activity {
     private static final String TAG = "CardListActivity";
     private CardArrayAdapter cardArrayAdapter;
     private ListView listView;
-    String [] days = {"Everyday","Monday","Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"};
+    String [] days = {"Everyday (Monday to Friday)","Monday","Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"};
     TextView line;
 
     @Override

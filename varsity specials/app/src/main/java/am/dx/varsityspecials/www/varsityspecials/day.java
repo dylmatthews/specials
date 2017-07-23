@@ -15,21 +15,34 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 public class day extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("Durban North and Umhlanga/Monday/");
+    DatabaseReference myRef;
     TextView tv ;
-    String text="";
+    TextView tv2;
+    private cardarray2 cardArrayAdapter;
+    private ListView listView;
+   private String text[];
     String day ="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_day);
+            setContentView(R.layout.listview);
+            listView = (ListView) findViewById(R.id.card_listView);
             tv=(TextView) findViewById(R.id.line1);
-           // day = getIntent().getStringExtra("day");
+            text= new String[10];
+           day = getIntent().getStringExtra("day");
+            myRef = database.getReference("Durban North and Umhlanga/"+day);
             setTitle(day);
+            listView.addHeaderView(new View(this));
+            listView.addFooterView(new View(this));
+
+
+            cardArrayAdapter = new cardarray2(getApplicationContext(), R.layout.list_item_card);
            // day = "Durban North and Umhlanga/Monday/Connors public house";
 
 
@@ -66,15 +79,19 @@ public class day extends AppCompatActivity {
     }
 
     private void showData(DataSnapshot dataSnapshot) {
-        toast("hello show data");
-      //  Iterable<DataSnapshot> lstSnapshots = ;
+       // toast("hello show data");
+
+        int cnt =0;
+        //  Iterable<DataSnapshot> lstSnapshots = ;
         try {
             for (DataSnapshot ds : dataSnapshot.getChildren()) {
-              //  specialsInfo spi = new specialsInfo();
+                //listView.
+                //specialsInfo spi = new specialsInfo();
 
-              /* spi.setDescription(ds.child(key).getValue(specialsInfo.class).getDescription());
-                spi.setLocation(ds.child(key).getValue(specialsInfo.class).getLocation());
-                spi.setName(ds.child(key).getValue(specialsInfo.class).getName());
+                //spi.setDescription(ds.child("description").getValue(specialsInfo.class).getDescription().toString());
+               // toast(spi.getDescription());
+               // spi.setLocation(ds.child(key).getValue(specialsInfo.class).getLocation());
+                /*spi.setName(ds.child(key).getValue(specialsInfo.class).getName());
                 spi.setPrice(ds.child(key).getValue(specialsInfo.class).getPrice());
                 spi.setNumber(ds.child(key).getValue(specialsInfo.class).getNumber());
 
@@ -94,7 +111,7 @@ public class day extends AppCompatActivity {
                 logging("key " + key);
                // key = key+"/description";
                 //logging("key " + key);
-                 toast(key);
+                 //toast(key);
                 //logging("Before desciption");
                 //logging(ds.child(key).toString());
                 String des = ds.child("description").getValue().toString();
@@ -106,11 +123,18 @@ public class day extends AppCompatActivity {
                 logging("location\t" + location);
                 logging("price\t" + price);
 
-               text += key + "\ndescription	" + des +"\nnumber\t" + number+"\nlocation\t" + location +"\nprice\t" + price +"\n\n";
-                tv.setText(text);
+               text[cnt] = key + "#description	" + des +"#number" + number+"\nlocation\t" + location +"\nprice\t" + price +"\n\n";
+              // tv.setText(text[cnt]);
+                cnt++;
+                Card card = new Card(key, des);
+                cardArrayAdapter.add(card);
+                listView.setAdapter(cardArrayAdapter);
+
+
 
 
             }
+
         }catch (Exception ex)
         {
             logging("Error\n" + ex.getMessage());
