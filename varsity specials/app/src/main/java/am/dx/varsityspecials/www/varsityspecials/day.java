@@ -1,10 +1,12 @@
 package am.dx.varsityspecials.www.varsityspecials;
 
+import android.content.Intent;
 import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,7 +27,7 @@ public class day extends AppCompatActivity {
     TextView tv2;
     private cardarray2 cardArrayAdapter;
     private ListView listView;
-   private String text[];
+   private String text[][];
     String day ="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,7 @@ public class day extends AppCompatActivity {
             setContentView(R.layout.listview);
             listView = (ListView) findViewById(R.id.card_listView);
             tv=(TextView) findViewById(R.id.line1);
-            text= new String[10];
+            text= new String[10][10];
            day = getIntent().getStringExtra("day");
             myRef = database.getReference("Durban North and Umhlanga/"+day);
             setTitle(day);
@@ -42,7 +44,8 @@ public class day extends AppCompatActivity {
             listView.addFooterView(new View(this));
 
 
-            cardArrayAdapter = new cardarray2(getApplicationContext(), R.layout.list_item_card);
+
+
            // day = "Durban North and Umhlanga/Monday/Connors public house";
 
 
@@ -51,8 +54,9 @@ public class day extends AppCompatActivity {
 
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    toast("in data change");
-                    showData(dataSnapshot);
+
+                                      showData(dataSnapshot);
+
                 }
 
 
@@ -61,15 +65,16 @@ public class day extends AppCompatActivity {
 
                 }
             });
+
+
         }
         catch (Exception ex)
         {
-            Log.d("test", ex.getMessage());
+            logging("shit happened  "+ ex.getMessage());
         }
     }
 
-    public void toast(String t)
-    {
+    public void toast(String t) {
         Toast.makeText(this, t, Toast.LENGTH_SHORT).show();
     }
 
@@ -80,10 +85,13 @@ public class day extends AppCompatActivity {
 
     private void showData(DataSnapshot dataSnapshot) {
        // toast("hello show data");
+        cardArrayAdapter = new cardarray2(getApplicationContext(), R.layout.list_item_card);
+        //cardArrayAdapter.clear();
 
         int cnt =0;
         //  Iterable<DataSnapshot> lstSnapshots = ;
         try {
+
             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                 //listView.
                 //specialsInfo spi = new specialsInfo();
@@ -123,21 +131,60 @@ public class day extends AppCompatActivity {
                 logging("location\t" + location);
                 logging("price\t" + price);
 
-               text[cnt] = key + "#description	" + des +"#number" + number+"\nlocation\t" + location +"\nprice\t" + price +"\n\n";
-              // tv.setText(text[cnt]);
+               text[cnt][0] = key;
+                text[cnt][1]=des;
+                text[cnt][2]= number;
+                text[cnt][3]=location;
+                text[cnt][4]=price;
+              //toast(text[cnt]);
+                // tv.setText(text[cnt]);
                 cnt++;
                 Card card = new Card(key, des);
                 cardArrayAdapter.add(card);
+
                 listView.setAdapter(cardArrayAdapter);
 
 
 
 
+                try {
+
+
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view,
+                                                int position, long id) {
+                            logging("shit about to happen");
+                            // TODO Auto-generated method stub
+                            //toast("Shit hello");
+                            Intent intent = new Intent(day.this, ScrollingActivity.class);
+                            logging("shit about to happen part 2");
+                            // toast("intenting");
+                            intent.putExtra("name", text[position-1][0]);
+                            intent.putExtra("description",text[position-1][1]);
+                            intent.putExtra("number",  text[position-1][2]);
+                            intent.putExtra("location",text[position-1][3]);
+                            intent.putExtra("price", text[position-1][4]);
+                                    startActivity(intent);
+
+                            logging("shit about to happen part 3");
+                        }
+                    });
+                }
+                catch(Exception ex)
+                {
+                    logging("shit happened  " + ex.getMessage());
+                }
+
+
+
             }
+
 
         }catch (Exception ex)
         {
-            logging("Error\n" + ex.getMessage());
+            logging("shit\n" + ex.getMessage());
         }
 
     }

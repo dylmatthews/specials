@@ -17,7 +17,11 @@
         </activity>
         <activity android:name=".day" />
         <activity android:name=".login" />
-        <activity android:name=".signUp"></activity>
+        <activity android:name=".signUp" />
+        <activity
+            android:name=".ScrollingActivity"
+            android:label="@string/title_activity_scrolling"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
