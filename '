@@ -1,0 +1,12 @@
+    var ref = new Firebase("https://foodspecials-5c5d9.firebaseio.com/";
+    function saveData(){
+    var area = document.getElementById("area").value;
+    var day = document.getElementById("dow").value;
+    var name = document.getElementById("name").value;
+    var location = document.getElementById("location").value;
+    var number = document.getElementById("number").value;
+    var des = document.getElementById("description").value;
+    var price = document.getElementById("price").value;
+    
+    var location = document.getElementById("location").value;
+    https://github.com/kyuhyung-park/firebase-practice/blob/master/index.html
