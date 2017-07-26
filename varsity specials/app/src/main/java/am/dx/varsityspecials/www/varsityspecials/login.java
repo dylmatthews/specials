@@ -98,7 +98,7 @@ public class login extends AppCompatActivity {
                         else
                         {
                             Log.w("test", "signInWithEmail", task.getException());
-
+                            
                             toast("Login Successful");
 
                         }

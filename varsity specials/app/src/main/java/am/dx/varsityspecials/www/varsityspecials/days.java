@@ -3,15 +3,10 @@ package am.dx.varsityspecials.www.varsityspecials;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import android.app.Activity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -20,26 +15,25 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class CardListActivity extends Activity {
+public class days extends AppCompatActivity {
 
-    private static final String TAG = "CardListActivity";
-    private CardArrayAdapter cardArrayAdapter;
-    private ListView listView;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
-    String area[];
-   /// String [] days = {"Everyday (Monday to Friday)","Monday","Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"};
-    TextView line;
-
+    private  String area = "";
+    private String days[];
+    private CardArrayAdapter cardArrayAdapter;
+    private ListView listView;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.listview);
         listView = (ListView) findViewById(R.id.card_listView);
-        area = new String [10];
-        myRef = database.getReference();
-        line = (TextView) findViewById(R.id.line1);
+        area = getIntent().getStringExtra("area");
+
+        myRef = database.getReference(area);
+        setTitle(area);
+        days = new String[10];
         listView.addHeaderView(new View(this));
         listView.addFooterView(new View(this));
 
@@ -47,7 +41,6 @@ public class CardListActivity extends Activity {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 showData(dataSnapshot);
 
             }
@@ -59,8 +52,11 @@ public class CardListActivity extends Activity {
             }
         });
 
+    }
 
-
+    public void logging(String t)
+    {
+        Log.i("Reading firebase", t);
     }
 
     private void showData(DataSnapshot dataSnapshot) {
@@ -74,15 +70,20 @@ public class CardListActivity extends Activity {
 
             for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-               area[cnt] = ds.getKey();
-                logging("area " + area[cnt]);
+                String key = ds.getKey();
 
-                Card card = new Card(area[cnt]);
+                logging("key " + key);
+
+
+                days[cnt] = key;
+
+                cnt++;
+                Card card = new Card(key.substring(1));
                 cardArrayAdapter.add(card);
 
                 listView.setAdapter(cardArrayAdapter);
 
-                cnt++;
+
 
 
                 try {
@@ -96,13 +97,12 @@ public class CardListActivity extends Activity {
                             logging("shit about to happen");
                             // TODO Auto-generated method stub
                             //toast("Shit hello");
-                            Intent intent = new Intent(CardListActivity.this, days.class);
+                            Intent intent = new Intent(days.this, Category.class);
                             logging("shit about to happen part 2");
                             // toast("intenting");
-                            intent.putExtra("area", area[position-1]);
-
+                            intent.putExtra("day", days[position-1]);
+                            intent.putExtra("area", area);
                             startActivity(intent);
-
                             logging("shit about to happen part 3");
                         }
                     });
@@ -123,12 +123,6 @@ public class CardListActivity extends Activity {
         }
 
     }
-
-    public void logging(String t)
-    {
-        Log.i("Reading firebase", t);
-    }
-
 
 
 }
