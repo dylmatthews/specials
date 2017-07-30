@@ -10,17 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="am.dx.varsityspecials.www.varsityspecials.login">
 
-    <Button
-        android:text="Login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="155dp"
-        android:id="@+id/btnLogin"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:onClick="onLogin"
-        android:layout_alignParentEnd="true" />
-
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_layout_email"
         android:layout_width="match_parent"
@@ -57,14 +46,37 @@
 </android.support.design.widget.TextInputLayout>
 
     <Button
+        android:text="Login With saved data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="33dp"
+        android:id="@+id/btnLoginSaved"
+        android:onClick="onLoginSaved"
+        android:layout_below="@+id/input_layout_password"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="Login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnLogin"
+        android:onClick="onLogin"
+        android:layout_below="@+id/btnLoginSaved"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp"
+        android:layout_alignParentEnd="true" />
+
+    <Button
         android:text="Sign Up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
         android:id="@+id/btnSignUp"
-        android:layout_alignParentEnd="true"
-        android:onClick="onSignUp" />
+        android:onClick="onSignUp"
+        android:layout_below="@+id/btnLogin"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="14dp"
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>

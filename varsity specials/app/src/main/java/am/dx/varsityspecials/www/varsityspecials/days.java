@@ -36,6 +36,13 @@ public class days extends AppCompatActivity {
         days = new String[10];
         listView.addHeaderView(new View(this));
         listView.addFooterView(new View(this));
+        if (FirebaseDatabase.getInstance() != null) {
+
+            FirebaseDatabase.getInstance().goOnline();
+
+
+
+        }
 
         myRef.addValueEventListener(new ValueEventListener() {
 
@@ -123,6 +130,36 @@ public class days extends AppCompatActivity {
         }
 
     }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (FirebaseDatabase.getInstance() != null) {
+           // toast("Gone online onResume Area");
+
+           FirebaseDatabase.getInstance().goOnline();
+
+
+
+        }
+    }
+    public void toast(String t) {
+        Toast.makeText(this, t, Toast.LENGTH_SHORT).show();
+    }
+
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if (FirebaseDatabase.getInstance() != null) {
+            FirebaseDatabase.getInstance().goOffline();
+           // toast("Gone offline onStop Area");
+
+        }
+    }
+
+
 
 
 }

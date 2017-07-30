@@ -45,14 +45,6 @@
        />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/nav"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_navigation_black_24dp"/>
-    <android.support.design.widget.FloatingActionButton
         android:id="@+id/call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -67,5 +59,21 @@
         android:layout_marginBottom="40dp"
         android:layout_marginRight="35dp"
         />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/nav"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_navigation_black_24dp"
+        app:backgroundTint="#0077c2"
+        app:borderWidth="0dp"
+        app:elevation="20dp"
+        app:fabSize="normal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="100dp"
+        android:layout_marginRight="35dp"/>
 
 </android.support.design.widget.CoordinatorLayout>

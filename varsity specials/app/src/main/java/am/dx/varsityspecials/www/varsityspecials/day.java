@@ -1,9 +1,8 @@
 package am.dx.varsityspecials.www.varsityspecials;
 
 import android.content.Intent;
-import android.nfc.Tag;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,13 +10,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
 
 public class day extends AppCompatActivity {
 
@@ -31,12 +29,15 @@ public class day extends AppCompatActivity {
     private  String day ="";
    private String area="";
    private String category = "";
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.listview);
             listView = (ListView) findViewById(R.id.card_listView);
+            mAuth = FirebaseAuth.getInstance();
             //tv=(TextView) findViewById(R.id.line1);
             text= new String[10][10];
            day = getIntent().getStringExtra("day");
@@ -47,9 +48,13 @@ public class day extends AppCompatActivity {
             setTitle(category);
             listView.addHeaderView(new View(this));
             listView.addFooterView(new View(this));
+            if (FirebaseDatabase.getInstance() != null) {
+
+                FirebaseDatabase.getInstance().goOnline();
 
 
 
+            }
 
            // day = "Durban North and Umhlanga/Monday/Connors public house";
 
@@ -78,6 +83,7 @@ public class day extends AppCompatActivity {
             logging("shit happened poes  "+ ex.getMessage());
         }
     }
+
 
     public void toast(String t) {
         Toast.makeText(this, t, Toast.LENGTH_SHORT).show();
@@ -144,8 +150,9 @@ public class day extends AppCompatActivity {
                         intent.putExtra("description", text[position - 1][1]);
                         intent.putExtra("number", text[position - 1][2]);
                         intent.putExtra("location", text[position - 1][3]);
+                        intent.putExtra("area", area);
                         intent.putExtra("price", text[position - 1][4]);
-                        intent.putExtra("time", text[position-1][4]);
+                        intent.putExtra("time", text[position-1][5]);
                         startActivity(intent);
 
                         logging("shit about to happen part 69");
@@ -156,6 +163,32 @@ public class day extends AppCompatActivity {
 
 
 
+    }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (FirebaseDatabase.getInstance() != null) {
+           // toast("Gone online onResume Area");
+
+            FirebaseDatabase.getInstance().goOnline();
+
+
+
+        }
+    }
+
+
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if (FirebaseDatabase.getInstance() != null) {
+            FirebaseDatabase.getInstance().goOffline();
+           // toast("Gone offline onStop Area");
+
+        }
     }
 
 

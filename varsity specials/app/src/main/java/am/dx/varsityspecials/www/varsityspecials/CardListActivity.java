@@ -1,15 +1,11 @@
 package am.dx.varsityspecials.www.varsityspecials;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +23,7 @@ public class CardListActivity extends Activity {
     private ListView listView;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
+
     String area[];
    /// String [] days = {"Everyday (Monday to Friday)","Monday","Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"};
     TextView line;
@@ -42,7 +39,14 @@ public class CardListActivity extends Activity {
         line = (TextView) findViewById(R.id.line1);
         listView.addHeaderView(new View(this));
         listView.addFooterView(new View(this));
+        if (FirebaseDatabase.getInstance() != null) {
 
+
+            FirebaseDatabase.getInstance().goOnline();
+
+
+
+        }
         myRef.addValueEventListener(new ValueEventListener() {
 
             @Override
@@ -62,6 +66,39 @@ public class CardListActivity extends Activity {
 
 
     }
+
+    public void toast(String t) {
+        Toast.makeText(this, t, Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (FirebaseDatabase.getInstance() != null) {
+            //toast("Gone online onResume Area");
+
+                FirebaseDatabase.getInstance().goOnline();
+
+
+
+        }
+    }
+
+
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if (FirebaseDatabase.getInstance() != null) {
+            FirebaseDatabase.getInstance().goOffline();
+
+
+        }
+    }
+
+
 
     private void showData(DataSnapshot dataSnapshot) {
         // toast("hello show data");

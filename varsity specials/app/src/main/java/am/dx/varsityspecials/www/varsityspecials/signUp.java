@@ -1,6 +1,7 @@
 package am.dx.varsityspecials.www.varsityspecials;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class signUp extends AppCompatActivity {
 
@@ -22,6 +24,12 @@ public class signUp extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    SharedPreferences login;
+
+    String prefName = "login";
+
+    private  String email= "";
+    private  String password="";
     EditText em;
     EditText pa;
     EditText cpa;
@@ -34,22 +42,19 @@ public class signUp extends AppCompatActivity {
         em = (EditText) findViewById(R.id.etEmail) ;
         pa= (EditText) findViewById(R.id.etPassword);
         cpa = (EditText) findViewById(R.id.etComPassword);
+        if (FirebaseDatabase.getInstance() != null) {
+            //toast("Gone online onResume Area");
 
-    }
+            FirebaseDatabase.getInstance().goOnline();
 
-    @Override
-    public void onStart() {
-        super.onStart();
 
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
         }
+
     }
+
+
+
     public void toast(String t)
     {
         Toast output= Toast.makeText(this, t, Toast.LENGTH_SHORT);
@@ -59,8 +64,8 @@ public class signUp extends AppCompatActivity {
 
     public void onSignUp(View view)
     { try {
-        String email = em.getText().toString();
-        String password = pa.getText().toString();
+        email = em.getText().toString();
+        password = pa.getText().toString();
         String cPassword = cpa.getText().toString();
         if (email.equals("")|| password.equals("") || cPassword.equals("")) {
 
@@ -82,6 +87,12 @@ public class signUp extends AppCompatActivity {
                                 toast("Sign Up failed");
                             } else {
                                toast("Sign Up Successful");
+                                login = getSharedPreferences(prefName, MODE_PRIVATE);
+                                SharedPreferences.Editor editor = login.edit();
+                                editor.clear();
+                                editor.putString("email",email);
+                                editor.putString("password",password);
+                                editor.apply();
                                 Intent in = new Intent(signUp.this,login.class);
                                 startActivity(in);
 
@@ -104,4 +115,34 @@ public class signUp extends AppCompatActivity {
 
     }
     }
+
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (FirebaseDatabase.getInstance() != null) {
+          //  toast("Gone online onResume Area");
+
+            FirebaseDatabase.getInstance().goOnline();
+
+
+
+        }
+    }
+
+    @Override
+    public void onStop()
+    {
+
+        if (FirebaseDatabase.getInstance() != null) {
+            FirebaseDatabase.getInstance().goOffline();
+            //toast("Gone offline onStop Area");
+
+        }
+        super.onStop();
+    }
+
+
+
 }

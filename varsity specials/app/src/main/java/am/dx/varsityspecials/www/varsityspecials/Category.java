@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -19,6 +20,8 @@ public class Category extends AppCompatActivity {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     private CardArrayAdapter cardArrayAdapter;
     private ListView listView;
     private String day = "";
@@ -38,6 +41,14 @@ public class Category extends AppCompatActivity {
         setTitle(day.substring(1));
         listView.addHeaderView(new View(this));
         listView.addFooterView(new View(this));
+        if (FirebaseDatabase.getInstance() != null) {
+          //  toast("Gone online onResume Area");
+
+            FirebaseDatabase.getInstance().goOnline();
+
+
+
+        }
 
         myRef.addValueEventListener(new ValueEventListener() {
 
@@ -54,6 +65,10 @@ public class Category extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void toast(String t) {
+        Toast.makeText(this, t, Toast.LENGTH_SHORT).show();
     }
 
     public void logging(String t) {
@@ -120,6 +135,30 @@ public class Category extends AppCompatActivity {
 
         } catch (Exception ex) {
             logging("poes 2\n" + ex.getMessage());
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (FirebaseDatabase.getInstance() != null) {
+           // toast("Gone online onResume Area");
+
+            FirebaseDatabase.getInstance().goOnline();
+
+
+
+        }
+    }
+
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if (FirebaseDatabase.getInstance() != null) {
+            FirebaseDatabase.getInstance().goOffline();
+           // toast("Gone offline onStop Area");
+
         }
     }
 }
