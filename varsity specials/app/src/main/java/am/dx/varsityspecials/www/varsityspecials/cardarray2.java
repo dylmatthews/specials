@@ -23,6 +23,7 @@ public class cardarray2 extends ArrayAdapter<Card> {
     static class CardViewHolder {
         TextView line1;
         TextView line2;
+        TextView line3;
     }
 
     public cardarray2(Context context, int textViewResourceId) {
@@ -55,6 +56,7 @@ public class cardarray2 extends ArrayAdapter<Card> {
             viewHolder = new CardViewHolder();
             viewHolder.line1 = (TextView) row.findViewById(R.id.line11);
             viewHolder.line2 = (TextView) row.findViewById(R.id.line2);
+            viewHolder.line3 = (TextView) row.findViewById(R.id.line3);
             row.setTag(viewHolder);
         } else {
             viewHolder = (CardViewHolder)row.getTag();
@@ -62,6 +64,7 @@ public class cardarray2 extends ArrayAdapter<Card> {
         Card card = getItem(position);
         viewHolder.line1.setText(card.getLine1());
         viewHolder.line2.setText(card.getLine2());
+        viewHolder.line3.setText(card.getLine3());
         return row;
     }
 

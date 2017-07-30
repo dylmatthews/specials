@@ -1,9 +1,10 @@
 package am.dx.varsityspecials.www.varsityspecials;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -15,8 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
-
-import static android.R.attr.password;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class login extends AppCompatActivity {
 
@@ -24,6 +24,10 @@ public class login extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     EditText em;
     EditText pa;
+    SharedPreferences login;
+    String prefName = "login";
+    private  String email= "";
+    private  String password="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,15 @@ public class login extends AppCompatActivity {
             pa= (EditText) findViewById(R.id.etPassword);
             mAuth = FirebaseAuth.getInstance();
             FirebaseCrash.log("Activity created");
+            if (FirebaseDatabase.getInstance() != null) {
+               // toast("Gone online onResume Area");
+
+                FirebaseDatabase.getInstance().goOnline();
+
+
+
+            }
+
         }
         catch(Exception ex) {
             FirebaseCrash.log("Activity created");
@@ -53,32 +66,68 @@ public class login extends AppCompatActivity {
         startActivity(in);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-       //;
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-    public void toast(String t)
+        public void toast(String t)
     {
         Toast output= Toast.makeText(this, t, Toast.LENGTH_SHORT);
         output.setGravity(Gravity.CENTER,0,0);
         output.show();
     }
 
+    public void onLoginSaved(View view)
+    {
+        try{
+            login = getSharedPreferences(prefName,MODE_PRIVATE);
+            email = login.getString("email", "");
+            toast(email);
+            password = login.getString("password","");
+
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d("test", "signInWithEmail:onComplete:" + task.isSuccessful());
+
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Log.w("test", "signInWithEmail", task.getException());
+
+                                toast("Login Error");
+
+                            }
+                            else
+                            {
+                                Log.w("test", "signInWithEmail", task.getException());
+
+
+
+                                toast("Login Successful");
+                                Intent intent = new Intent(login.this, CardListActivity.class);
+                                startActivity(intent);
+
+                            }
+
+                            // ...
+                        }
+                    });
+        }
+        catch(Exception ex) {
+            toast(ex.getMessage());
+        }
+
+
+    }
 
     public void onLogin(View view)
     {
 
-        String email= em.getText().toString();
-        String password = pa.getText().toString();
+
+        email=em.getText().toString();
+       password = pa.getText().toString();
+
+
 
          mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -99,7 +148,11 @@ public class login extends AppCompatActivity {
                         {
                             Log.w("test", "signInWithEmail", task.getException());
 
+
+
                             toast("Login Successful");
+                            Intent intent = new Intent(login.this, CardListActivity.class);
+                            startActivity(intent);
 
                         }
 
@@ -109,4 +162,31 @@ public class login extends AppCompatActivity {
 
 
     }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (FirebaseDatabase.getInstance() != null) {
+            //toast("Gone online onResume Area");
+
+            FirebaseDatabase.getInstance().goOnline();
+
+
+
+        }
+    }
+
+    @Override
+    public void onPause()
+    {
+
+        if (FirebaseDatabase.getInstance() != null) {
+            FirebaseDatabase.getInstance().goOffline();
+            // toast("Gone offline onDestoy Area");
+
+        }
+        super.onPause();
+    }
+
 }
