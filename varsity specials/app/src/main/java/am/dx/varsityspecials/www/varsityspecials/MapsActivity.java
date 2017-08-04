@@ -46,7 +46,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ProgressDialog progressDialog;
     LocationManager locationManager;
     Location location;
-    private double latitude;
+    private double latitude;`
     private double longitude;
     private String area="";
     private String name="";

@@ -38,7 +38,7 @@ public class ScrollingActivity extends AppCompatActivity {
         String location = getIntent().getStringExtra("location");
         String price =getIntent().getStringExtra("price");
         setTitle(name);
-        tv.setText("The time for this special, for "+ name + "\n\t" + time +"\nYou'll find " + name + " at " + location+ ".\n\nThe specials are :\n" + des +"\n\n\nCurrently the specials are submitted by users.\nIt is recommended that you phoone the place before hand and ask if the special is still on.\nAlso to book a table");
+        tv.setText("The time for this special, for "+ name + " is " + time +"\nYou'll find " + name + " at\n " + location+ ".\n\nThe specials are :\n" + des +"\n\n\nCurrently the specials are submitted by users.\n\nIt is recommended that you phone the place before hand and ask if the special is still on.\n\nAlso to book a table");
 
 
         FloatingActionButton nav = (FloatingActionButton) findViewById(R.id.nav);
