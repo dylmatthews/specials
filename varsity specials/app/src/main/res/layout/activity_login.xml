@@ -8,7 +8,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="am.dx.varsityspecials.www.varsityspecials.login">
+    tools:context="am.dx.varsityspecials.www.varsityspecials.login"
+    android:background="@color/colorBackground">
+
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_layout_email"
@@ -47,6 +49,8 @@
 
     <Button
         android:text="Login With saved data"
+        android:background="@color/colorAccent"
+        android:textColor="#ffffff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="33dp"
@@ -58,6 +62,8 @@
 
     <Button
         android:text="Login"
+        android:background="@color/colorAccent"
+        android:textColor="#ffffff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnLogin"
@@ -69,6 +75,8 @@
 
     <Button
         android:text="Sign Up"
+        android:background="@color/colorAccent"
+        android:textColor="#ffffff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnSignUp"

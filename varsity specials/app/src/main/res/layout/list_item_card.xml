@@ -6,7 +6,8 @@
 	android:layout_height="match_parent"
 	android:paddingLeft="15dp"
 	android:paddingRight="15dp"
-	android:descendantFocusability="beforeDescendants">
+	android:descendantFocusability="beforeDescendants"
+	android:background="@color/colorBackground">
 
 
 	<LinearLayout
@@ -17,7 +18,7 @@
 		android:paddingTop="15dp"
 		android:paddingBottom="15dp"
 		android:paddingRight="15dp"
-		android:background="@drawable/card_background_selector"
+		android:background="@color/card"
 		android:descendantFocusability="afterDescendants"
 		android:weightSum="1">
 

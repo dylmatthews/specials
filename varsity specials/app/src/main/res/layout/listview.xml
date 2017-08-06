@@ -5,7 +5,7 @@
 	android:orientation="vertical"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="#49a7cc">
+	android:background="@color/colorBackground">
 
 	<ListView
 		android:id="@+id/card_listView"
