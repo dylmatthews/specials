@@ -111,6 +111,7 @@ public class day extends AppCompatActivity {
                 //logging("Before desciption");
                 //logging(ds.child(key).toString());
                 String des = ds.child("description").getValue().toString();
+                des = des.replace("#", "\n\n");
                 String number = ds.child("number").getValue().toString();
                 String location = ds.child("location").getValue().toString();
                 String price = ds.child("Price").getValue().toString();
@@ -151,6 +152,7 @@ public class day extends AppCompatActivity {
                         intent.putExtra("number", text[position - 1][2]);
                         intent.putExtra("location", text[position - 1][3]);
                         intent.putExtra("area", area);
+                        intent.putExtra("day", day.substring(1));
                         intent.putExtra("price", text[position - 1][4]);
                         intent.putExtra("time", text[position-1][5]);
                         startActivity(intent);

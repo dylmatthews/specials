@@ -21,6 +21,8 @@ public class ScrollingActivity extends AppCompatActivity {
    private String name="";
     private  String des ="";
     private String area="";
+    private String day="";
+    private  String time="";
     TextView tv;
 
     @Override
@@ -34,9 +36,10 @@ public class ScrollingActivity extends AppCompatActivity {
        des = getIntent().getStringExtra("description");
         number = getIntent().getStringExtra("number");
         area = getIntent().getStringExtra("area");
-        String time = getIntent().getStringExtra("time");
-        String location = getIntent().getStringExtra("location");
-        String price =getIntent().getStringExtra("price");
+       time = getIntent().getStringExtra("time");
+        final String location = getIntent().getStringExtra("location");
+        final String price =getIntent().getStringExtra("price");
+        day = getIntent().getStringExtra("day");
         setTitle(name);
         tv.setText("The time for this special, for "+ name + " is " + time +"\nYou'll find " + name + " at\n " + location+ ".\n\nThe specials are :\n" + des +"\n\n\nCurrently the specials are submitted by users.\n\nIt is recommended that you phone the place before hand and ask if the special is still on.\n\nAlso to book a table");
 
@@ -66,6 +69,26 @@ public class ScrollingActivity extends AppCompatActivity {
                 }
             }
         });
+
+        FloatingActionButton whatsapp = (FloatingActionButton) findViewById(R.id.whatsapp);
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                try {
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Check out this crazy special on " + day + ". \nThe special is: " + des + ". \nAt " + name + ". \n\nTime: " + time +". \n\nThe price is: "+price+". \n\nThe location is " + location );
+                    sendIntent.setType("text/plain");
+                    sendIntent.setPackage("com.whatsapp");
+                    startActivity(sendIntent);
+                }
+                catch (Exception e)
+                {
+                    Toast.makeText(ScrollingActivity.this, "You dont have whatsapp installed", Toast.LENGTH_SHORT).show();
+                }
+            }
+            });
 
 
 
@@ -140,8 +163,10 @@ public class ScrollingActivity extends AppCompatActivity {
 
     public void call_action() {
         Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         callIntent.setData(Uri.parse("tel:" + number));
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            startActivity(callIntent);
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -152,7 +177,7 @@ public class ScrollingActivity extends AppCompatActivity {
             return;
         }
         else {
-            startActivity(callIntent);
+            //;
         }
     }
 
