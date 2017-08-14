@@ -8,6 +8,11 @@ public class Card {
     private String line1;
     private String line2;
     private String line3;
+    private  String image;
+
+
+
+
 
     public Card(String name, String des, String time) {
         line1 = name;
@@ -16,6 +21,18 @@ public class Card {
     }
     public Card(String line1) {
         this.line1 = line1;
+    }
+
+    public Card(String location, String des, String img, int n) {
+        line1 = location;
+        line2 = des;
+        image = img;
+
+
+    }
+
+    public String getImage() {
+        return image;
     }
 
     public String getLine1() {

@@ -111,48 +111,46 @@ public class CardListActivity extends Activity {
 
             for (DataSnapshot ds : dataSnapshot.getChildren()) {
 
-               area[cnt] = ds.getKey();
-                logging("area " + area[cnt]);
+                if (!(ds.getKey().equals("Blog"))) {
+                    area[cnt] = ds.getKey();
+                    logging("area " + area[cnt]);
 
-                Card card = new Card(area[cnt]);
-                cardArrayAdapter.add(card);
+                    Card card = new Card(area[cnt]);
+                    cardArrayAdapter.add(card);
 
-                listView.setAdapter(cardArrayAdapter);
+                    listView.setAdapter(cardArrayAdapter);
 
-                cnt++;
-
-
-                try {
+                    cnt++;
 
 
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    try {
 
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view,
-                                                int position, long id) {
-                            logging("shit about to happen");
-                            // TODO Auto-generated method stub
-                            //toast("Shit hello");
-                            Intent intent = new Intent(CardListActivity.this, days.class);
-                            logging("shit about to happen part 2");
-                            // toast("intenting");
-                            intent.putExtra("area", area[position-1]);
 
-                            startActivity(intent);
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-                            logging("shit about to happen part 3");
-                        }
-                    });
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view,
+                                                    int position, long id) {
+                                logging("shit about to happen");
+                                // TODO Auto-generated method stub
+                                //toast("Shit hello");
+                                Intent intent = new Intent(CardListActivity.this, days.class);
+                                logging("shit about to happen part 2");
+                                // toast("intenting");
+                                intent.putExtra("area", area[position - 1]);
+
+                                startActivity(intent);
+
+                                logging("shit about to happen part 3");
+                            }
+                        });
+                    } catch (Exception ex) {
+                        logging("shit happened  " + ex.getMessage());
+                    }
+
+
                 }
-                catch(Exception ex)
-                {
-                    logging("shit happened  " + ex.getMessage());
-                }
-
-
-
             }
-
 
         }catch (Exception ex)
         {
