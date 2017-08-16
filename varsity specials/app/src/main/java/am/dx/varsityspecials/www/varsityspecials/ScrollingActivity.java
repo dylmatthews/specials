@@ -6,16 +6,19 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ScrollingActivity extends AppCompatActivity {
+public class ScrollingActivity extends AppCompatActivity {//implements NavigationView.OnNavigationItemSelectedListener {
 
     private String number = "";
    private String name="";
@@ -23,6 +26,7 @@ public class ScrollingActivity extends AppCompatActivity {
     private String area="";
     private String day="";
     private  String time="";
+    private NavigationView navigationView;
     TextView tv;
 
     @Override
@@ -30,6 +34,8 @@ public class ScrollingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scrolling);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+      //  navigationView.setNavigationItemSelectedListener(this);
         tv = (TextView) findViewById(R.id.tvScroll) ;
         setSupportActionBar(toolbar);
         name = getIntent().getStringExtra("name");
@@ -225,5 +231,9 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
 
+  //  @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+        return false;
+    }
 }

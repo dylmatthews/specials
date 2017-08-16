@@ -1,9 +1,12 @@
 package am.dx.varsityspecials.www.varsityspecials;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,7 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class Category extends AppCompatActivity {
+public class Category extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
@@ -27,18 +30,19 @@ public class Category extends AppCompatActivity {
     private String day = "";
     private String area = "";
     private  String category[];
-
+    private NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listview);
         listView = (ListView) findViewById(R.id.card_listView);
         category = new String[10];
-
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         day = getIntent().getStringExtra("day");
         area = getIntent().getStringExtra("area");
         myRef = database.getReference(area + "/" + day);
-        setTitle(day.substring(1));
+        setTitle(day.substring(1)+ " specials");
         listView.addHeaderView(new View(this));
         listView.addFooterView(new View(this));
         if (FirebaseDatabase.getInstance() != null) {
@@ -93,7 +97,28 @@ public class Category extends AppCompatActivity {
                 category[cnt] = key;
 
                 cnt++;
-                Card card = new Card(key);
+                int cntPos=0;
+                StringBuilder sb = new StringBuilder();
+                boolean found = false;
+                for(char c : key.toCharArray()) {
+                    if (Character.isDigit(c)) {
+                        sb.append(c);
+                        cntPos++;
+
+                    } else if (found == true) {
+
+
+                        break;
+
+                    } else {
+                        found = true;
+                        // If already found a digit before and this char is not a digit, stop looping
+
+                    }
+                }
+                    Toast.makeText(this, "Counter was " + cntPos, Toast.LENGTH_SHORT).show();
+
+                Card card = new Card(key.substring(cntPos));
                 cardArrayAdapter.add(card);
 
                 listView.setAdapter(cardArrayAdapter);
@@ -160,5 +185,25 @@ public class Category extends AppCompatActivity {
            // toast("Gone offline onStop Area");
 
         }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id==R.id.nav_login)
+        {
+            startActivity(new Intent(getApplicationContext(), login.class));
+        }
+        else if (id==R.id.nav_addBlog)
+        {
+            startActivity(new Intent(getApplicationContext(), blogHome.class));
+        }
+        else if (id==R.id.nav_viewBlog)
+        {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
+        return false;
     }
 }

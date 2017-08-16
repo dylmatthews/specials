@@ -3,7 +3,10 @@ package am.dx.varsityspecials.www.varsityspecials;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,13 +19,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class CardListActivity extends Activity {
+public class CardListActivity extends Activity  implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = "CardListActivity";
     private CardArrayAdapter cardArrayAdapter;
     private ListView listView;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
+    private NavigationView navigationView;
 
     String area[];
    /// String [] days = {"Everyday (Monday to Friday)","Monday","Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"};
@@ -33,6 +37,9 @@ public class CardListActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.listview);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+       // super.onCreateDrawer();
         listView = (ListView) findViewById(R.id.card_listView);
         area = new String [10];
         myRef = database.getReference();
@@ -165,5 +172,24 @@ public class CardListActivity extends Activity {
     }
 
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+
+        int id = item.getItemId();
+
+        if (id==R.id.nav_login)
+        {
+            startActivity(new Intent(getApplicationContext(), login.class));
+        }
+        else if (id==R.id.nav_addBlog)
+        {
+            startActivity(new Intent(getApplicationContext(), blogHome.class));
+        }
+        else if (id==R.id.nav_viewBlog)
+        {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
+        return false;
+    }
 }

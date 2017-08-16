@@ -67,42 +67,45 @@ public class signUp extends AppCompatActivity {
         email = em.getText().toString();
         password = pa.getText().toString();
         String cPassword = cpa.getText().toString();
+        if (pa.length()>8)
+        {
         if (email.equals("")|| password.equals("") || cPassword.equals("")) {
 
         toast("You left an input blank");
         }
-    else{
-        if (password.equals(cPassword)) {
+    else {
+            if (password.equals(cPassword)) {
 
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d("test", "createUserWithEmail:onComplete:" + task.isSuccessful());
+                mAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                Log.d("test", "createUserWithEmail:onComplete:" + task.isSuccessful());
 
-                            // If sign in fails, display a message to the user. If sign in succeeds
-                            // the auth state listener will be notified and logic to handle the
-                            // signed in user can be handled in the listener.
-                            if (!task.isSuccessful()) {
-                                toast("Sign Up failed");
-                            } else {
-                               toast("Sign Up Successful");
-                                login = getSharedPreferences(prefName, MODE_PRIVATE);
-                                SharedPreferences.Editor editor = login.edit();
-                                editor.clear();
-                                editor.putString("email",email);
-                                editor.putString("password",password);
-                                editor.apply();
-                                Intent in = new Intent(signUp.this,login.class);
-                                startActivity(in);
+                                // If sign in fails, display a message to the user. If sign in succeeds
+                                // the auth state listener will be notified and logic to handle the
+                                // signed in user can be handled in the listener.
+                                if (!task.isSuccessful()) {
+                                    toast("Sign Up failed");
+                                } else {
+                                    toast("Sign Up Successful");
+                                    login = getSharedPreferences(prefName, MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = login.edit();
+                                    editor.clear();
+                                    editor.putString("email", email);
+                                    editor.putString("password", password);
+                                    editor.apply();
+                                    Intent in = new Intent(signUp.this, login.class);
+                                    startActivity(in);
 
+                                }
+
+                                // ...
                             }
-
-                            // ...
-                        }
-                    });
-        } else {
-            toast("Passwords Don't match");
+                        });
+            } else {
+                toast("Passwords Don't match");
+            }
         }
     }
     }

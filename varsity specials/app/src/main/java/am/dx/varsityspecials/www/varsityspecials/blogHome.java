@@ -6,6 +6,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -24,7 +28,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class blogHome extends base_activity {
+public class blogHome extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private ImageButton imageButton;
     private static final int Gallery_Request = 1;
@@ -35,13 +39,16 @@ public class blogHome extends base_activity {
     private ProgressDialog pb;
     private DatabaseReference mdref;
     private RatingBar rb;
+    private NavigationView navigationView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blog_home);
-        super.onCreateDrawer();
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        navigationView.setNavigationItemSelectedListener(this);
         storageReference = FirebaseStorage.getInstance().getReference();
         mdref = FirebaseDatabase.getInstance().getReference().child("Blog");
         imageButton = (ImageButton) findViewById(R.id.ibImageSelect);
@@ -82,6 +89,10 @@ title = (EditText) findViewById(R.id.NOP);
 
     }
 
+
+
+
+
     public void startPosting() throws IOException
 
     {
@@ -115,6 +126,7 @@ title = (EditText) findViewById(R.id.NOP);
                         newPost.child("desc").setValue(desc);
                         newPost.child("image").setValue(imageUri.getLastPathSegment());
                         newPost.child("uid").setValue(cu.getUid());
+                        pb.dismiss();
 
 
 
@@ -125,10 +137,29 @@ title = (EditText) findViewById(R.id.NOP);
         }catch (Exception ex)
         {
             Toast.makeText(this, "An error happened, image probably still got uplaoded\n" + ex.getMessage() , Toast.LENGTH_SHORT).show();
-        }
-        finally {
             pb.dismiss();
         }
 
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id==R.id.nav_login)
+        {
+            startActivity(new Intent(getApplicationContext(), login.class));
+        }
+        else if (id==R.id.nav_addBlog)
+        {
+            startActivity(new Intent(getApplicationContext(), blogHome.class));
+        }
+        else if (id==R.id.nav_viewBlog)
+        {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
+        return false;
     }
 }

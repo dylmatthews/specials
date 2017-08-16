@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class login extends AppCompatActivity {
+public class login extends AppCompatActivity  implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -28,6 +30,7 @@ public class login extends AppCompatActivity {
     String prefName = "login";
     private  String email= "";
     private  String password="";
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,8 @@ public class login extends AppCompatActivity {
             setContentView(R.layout.activity_login);
             em = (EditText) findViewById(R.id.etEmail) ;
             pa= (EditText) findViewById(R.id.etPassword);
+            navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
             mAuth = FirebaseAuth.getInstance();
             FirebaseCrash.log("Activity created");
             if (FirebaseDatabase.getInstance() != null) {
@@ -46,6 +51,10 @@ public class login extends AppCompatActivity {
 
 
 
+            }
+            if(mAuth.getCurrentUser()!=null)
+            {
+                startActivity(new Intent(getApplicationContext(), CardListActivity.class));
             }
 
         }
@@ -81,37 +90,37 @@ public class login extends AppCompatActivity {
             email = login.getString("email", "");
             toast(email);
             password = login.getString("password","");
+            if (email.isEmpty()||password.isEmpty()) {
+            }
+            else {
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                Log.d("test", "signInWithEmail:onComplete:" + task.isSuccessful());
 
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d("test", "signInWithEmail:onComplete:" + task.isSuccessful());
+                                // If sign in fails, display a message to the user. If sign in succeeds
+                                // the auth state listener will be notified and logic to handle the
+                                // signed in user can be handled in the listener.
+                                if (!task.isSuccessful()) {
+                                    Log.w("test", "signInWithEmail", task.getException());
 
-                            // If sign in fails, display a message to the user. If sign in succeeds
-                            // the auth state listener will be notified and logic to handle the
-                            // signed in user can be handled in the listener.
-                            if (!task.isSuccessful()) {
-                                Log.w("test", "signInWithEmail", task.getException());
+                                    toast("Login Error");
 
-                                toast("Login Error");
+                                } else {
+                                    Log.w("test", "signInWithEmail", task.getException());
 
+
+                                    toast("Login Successful");
+                                    Intent intent = new Intent(login.this, CardListActivity.class);
+                                    startActivity(intent);
+
+                                }
+
+                                // ...
                             }
-                            else
-                            {
-                                Log.w("test", "signInWithEmail", task.getException());
-
-
-
-                                toast("Login Successful");
-                                Intent intent = new Intent(login.this, CardListActivity.class);
-                                startActivity(intent);
-
-                            }
-
-                            // ...
-                        }
-                    });
+                        });
+            }
         }
         catch(Exception ex) {
             toast(ex.getMessage());
@@ -128,37 +137,39 @@ public class login extends AppCompatActivity {
        password = pa.getText().toString();
 
 
+        if (email.isEmpty()||password.isEmpty())
+        {
+            Toast.makeText(this, "You left a field blank", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d("test", "signInWithEmail:onComplete:" + task.isSuccessful());
 
-         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("test", "signInWithEmail:onComplete:" + task.isSuccessful());
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Log.w("test", "signInWithEmail", task.getException());
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w("test", "signInWithEmail", task.getException());
+                                toast("Login Error");
 
-                           toast("Login Error");
+                            } else {
+                                Log.w("test", "signInWithEmail", task.getException());
 
+
+                                toast("Login Successful");
+                                Intent intent = new Intent(login.this, CardListActivity.class);
+                                startActivity(intent);
+
+                            }
+
+                            // ...
                         }
-                        else
-                        {
-                            Log.w("test", "signInWithEmail", task.getException());
-
-
-
-                            toast("Login Successful");
-                            Intent intent = new Intent(login.this, CardListActivity.class);
-                            startActivity(intent);
-
-                        }
-
-                        // ...
-                    }
-                });
+                    });
+        }
 
 
     }
@@ -189,4 +200,26 @@ public class login extends AppCompatActivity {
         super.onPause();
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id==R.id.nav_login)
+        {
+            startActivity(new Intent(getApplicationContext(), login.class));
+        }
+        else if (id==R.id.nav_addBlog)
+        {
+            startActivity(new Intent(getApplicationContext(), blogHome.class));
+        }
+        else if (id==R.id.nav_viewBlog)
+        {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
+
+
+        return false;
+    }
 }

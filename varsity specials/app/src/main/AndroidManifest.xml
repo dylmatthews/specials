@@ -19,7 +19,7 @@
     <application
         android:largeHeap="true"
         android:allowBackup="true"
-        android:icon="@mipmap/iconmoneybox"
+        android:icon="@mipmap/ic_restaurant_white_24dp"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -27,7 +27,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyC9jPdVyt5Y3FakAuPGXdMWZbxNgdi05JY" />
 
-        <activity android:name=".blogHome">
+        <activity android:name=".login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,7 +43,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".days" />
         <activity android:name=".Category" />
-        <activity android:name=".login" />
+        <activity android:name=".blogHome" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

@@ -68,14 +68,16 @@
             android:layout_alignParentStart="true" />
 
         <Button
-            android:text="Button"
+            android:text="Post to blog"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ratingBar"
             android:layout_alignParentStart="true"
-            android:id="@+id/button2"
+            android:id="@+id/btnPost"
             android:layout_alignParentEnd="true"
             android:onClick="onSubmit" />
+
+
 
 
     </RelativeLayout>
