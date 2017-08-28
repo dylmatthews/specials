@@ -108,7 +108,7 @@ title = (EditText) findViewById(R.id.NOP);
                 //String file = imageUri.toString();
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bmp.compress(Bitmap.CompressFormat.JPEG, 10, baos);
+                bmp.compress(Bitmap.CompressFormat.JPEG, 25, baos);
                 byte[] data = baos.toByteArray();
                 Toast.makeText(this, imageUri.getLastPathSegment(), Toast.LENGTH_SHORT).show();
                 UploadTask filePath = upload.child(imageUri.getLastPathSegment()).putBytes(data);

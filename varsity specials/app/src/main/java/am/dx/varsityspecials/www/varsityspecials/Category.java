@@ -116,7 +116,7 @@ public class Category extends AppCompatActivity implements NavigationView.OnNavi
 
                     }
                 }
-                    Toast.makeText(this, "Counter was " + cntPos, Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(this, "Counter was " + cntPos, Toast.LENGTH_SHORT).show();
 
                 Card card = new Card(key.substring(cntPos));
                 cardArrayAdapter.add(card);

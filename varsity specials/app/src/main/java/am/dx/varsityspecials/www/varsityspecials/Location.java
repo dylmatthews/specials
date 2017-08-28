@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class CardListActivity extends Activity  implements NavigationView.OnNavigationItemSelectedListener{
+public class Location extends Activity  implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final String TAG = "CardListActivity";
     private CardArrayAdapter cardArrayAdapter;
@@ -141,7 +141,7 @@ public class CardListActivity extends Activity  implements NavigationView.OnNavi
                                 logging("shit about to happen");
                                 // TODO Auto-generated method stub
                                 //toast("Shit hello");
-                                Intent intent = new Intent(CardListActivity.this, days.class);
+                                Intent intent = new Intent(Location.this, days.class);
                                 logging("shit about to happen part 2");
                                 // toast("intenting");
                                 intent.putExtra("area", area[position - 1]);
@@ -189,6 +189,11 @@ public class CardListActivity extends Activity  implements NavigationView.OnNavi
         else if (id==R.id.nav_viewBlog)
         {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
+        else if (id==R.id.nav_question1)
+        {
+            startActivity(new Intent(getApplicationContext(), Question1.class));
+
         }
         return false;
     }

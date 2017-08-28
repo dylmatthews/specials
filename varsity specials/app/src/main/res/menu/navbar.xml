@@ -15,6 +15,9 @@
         <item android:title="Post To Blog"
             android:id="@+id/nav_addBlog"
             />
+        <item android:title="Question 1"
+            android:id="@+id/nav_question1"
+            />
 
     </group>
 

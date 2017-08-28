@@ -1,4 +1,4 @@
-package Modules;
+package direction;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -20,10 +20,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Mai Thanh Hiep on 4/3/2016.
- */
-//this code was taken from  here https://github.com/hiepxuan2008/GoogleMapDirectionSimple/
+
 public class DirectionFinder {
     private static final String DIRECTION_URL_API = "https://maps.googleapis.com/maps/api/directions/json?";
     private static final String GOOGLE_API_KEY = "AIzaSyCLj9vjpqR681nQdkqDPYtWZn_PII6CBb8"; //own api key
@@ -31,6 +28,7 @@ public class DirectionFinder {
     private String origin;
     private String destination;
 
+    //constructor
     public DirectionFinder(DirectionFinderListener listener, String origin, String destination) {
         this.listener = listener;
         this.origin = origin;
@@ -39,38 +37,41 @@ public class DirectionFinder {
 
     }
 
+    //executes direction finder
     public DirectionFinder execute() throws UnsupportedEncodingException {
 
         listener.onDirectionFinderStart();
         Log.i("POES", "execute:  test");
-       new DownloadRawData().execute(createUrl());
+       new DownloadRawData().execute(createUrl()); //calls downlaod raw data then executes create url
         return null;
     }
 
     private String createUrl() throws UnsupportedEncodingException {
-        String urlOrigin = URLEncoder.encode(origin, "utf-8");
-        String urlDestination = URLEncoder.encode(destination, "utf-8");
+        String urlOrigin = URLEncoder.encode(origin, "utf-8"); //encodes string
+        String urlDestination = URLEncoder.encode(destination, "utf-8"); //encodes string
 
         return DIRECTION_URL_API + "origin=" + urlOrigin + "&destination=" + urlDestination + "&key=" + GOOGLE_API_KEY;
+        //returns the end of the url for the google maps url for response
     }
 
     private class DownloadRawData extends AsyncTask<String, Void, String> {
 
         @Override
-        protected String doInBackground(String... params) {
-            String link = params[0];
+        protected String doInBackground(String... params) { //in background
+            String link = params[0]; //gets params [0]
             try {
                 URL url = new URL(link);
-                InputStream is = url.openConnection().getInputStream();
+                InputStream inputStream = url.openConnection().getInputStream();
                 StringBuffer buffer = new StringBuffer();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String line;
-                while ((line = reader.readLine()) != null) {
+                while ((line = reader.readLine()) != null) { //builds string
                     buffer.append(line + "\n");
                 }
 
                 return buffer.toString();
+                //returns json data
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -81,49 +82,46 @@ public class DirectionFinder {
         }
 
         @Override
-        protected void onPostExecute(String res) {
+        protected void onPostExecute(String res) { //post excecute
             try {
                 parseJSon(res);
+                //sends the json data to method to read json
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private void parseJSon(String data) throws JSONException {
-        if (data == null)
+    //reading google maps api response
+    private void parseJSon(String json) throws JSONException {
+        if (json == null)
             return;
 
-        List<Route> routes = new ArrayList<Route>();
-        JSONObject jsonData = new JSONObject(data);
+        List<Journey> journeys = new ArrayList<Journey>();
+        JSONObject jsonData = new JSONObject(json);
         JSONArray jsonRoutes = jsonData.getJSONArray("routes");
         for (int i = 0; i < jsonRoutes.length(); i++) {
             JSONObject jsonRoute = jsonRoutes.getJSONObject(i);
-            Route route = new Route();
+            Journey journey = new Journey();
 
             JSONObject overview_polylineJson = jsonRoute.getJSONObject("overview_polyline");
-            JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
-            JSONObject jsonLeg = jsonLegs.getJSONObject(0);
-           // JSONObject jsonDistance = jsonLeg.getJSONObject("distance");
-           // JSONObject jsonDuration = jsonLeg.getJSONObject("duration");
-            JSONObject jsonEndLocation = jsonLeg.getJSONObject("end_location");
-            JSONObject jsonStartLocation = jsonLeg.getJSONObject("start_location");
+            JSONArray Legs = jsonRoute.getJSONArray("legs");
+            JSONObject Leg = Legs.getJSONObject(0);
+            JSONObject jsonEndLocation = Leg.getJSONObject("end_location");
+            JSONObject jsonStartLocation = Leg.getJSONObject("start_location");
 
-           // route.distance = new Distance(jsonDistance.getString("text"), jsonDistance.getInt("value"));
-            //route.duration = new Duration(jsonDuration.getString("text"), jsonDuration.getInt("value"));
+            journey.endAddress = Leg.getString("end_address");
+            journey.startAddress = Leg.getString("start_address");
+            journey.startLocation = new LatLng(jsonStartLocation.getDouble("lat"), jsonStartLocation.getDouble("lng"));
+            journey.endLocation = new LatLng(jsonEndLocation.getDouble("lat"), jsonEndLocation.getDouble("lng"));
+            journey.points = decodePolyLine(overview_polylineJson.getString("points"));
 
-            route.endAddress = jsonLeg.getString("end_address");
-            route.startAddress = jsonLeg.getString("start_address");
-            route.startLocation = new LatLng(jsonStartLocation.getDouble("lat"), jsonStartLocation.getDouble("lng"));
-            route.endLocation = new LatLng(jsonEndLocation.getDouble("lat"), jsonEndLocation.getDouble("lng"));
-            route.points = decodePolyLine(overview_polylineJson.getString("points"));
-
-            routes.add(route);
+            journeys.add(journey);
         }
 
-        listener.onDirectionFinderSuccess(routes);
+        listener.onDirectionFinderSuccess(journeys);
     }
-
+//google's formula to decode coordinates to polyline
     private List<LatLng> decodePolyLine(final String poly) {
         int len = poly.length();
         int index = 0;

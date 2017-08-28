@@ -8,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -44,18 +45,25 @@ public class login extends AppCompatActivity  implements NavigationView.OnNaviga
             navigationView.setNavigationItemSelectedListener(this);
             mAuth = FirebaseAuth.getInstance();
             FirebaseCrash.log("Activity created");
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             if (FirebaseDatabase.getInstance() != null) {
                // toast("Gone online onResume Area");
-
+                toast("about to");
+                loginshared();
                 FirebaseDatabase.getInstance().goOnline();
 
 
-
-            }
-            if(mAuth.getCurrentUser()!=null)
+            } else
             {
-                startActivity(new Intent(getApplicationContext(), CardListActivity.class));
+                toast("about to login");
+                loginshared();
             }
+
+
 
         }
         catch(Exception ex) {
@@ -68,23 +76,8 @@ public class login extends AppCompatActivity  implements NavigationView.OnNaviga
 
 
     }
-    public void onSignUp(View view)
-    {
 
-        Intent in = new Intent(login.this,signUp.class);
-        startActivity(in);
-    }
-
-
-        public void toast(String t)
-    {
-        Toast output= Toast.makeText(this, t, Toast.LENGTH_SHORT);
-        output.setGravity(Gravity.CENTER,0,0);
-        output.show();
-    }
-
-    public void onLoginSaved(View view)
-    {
+    private void loginshared() {
         try{
             login = getSharedPreferences(prefName,MODE_PRIVATE);
             email = login.getString("email", "");
@@ -112,7 +105,7 @@ public class login extends AppCompatActivity  implements NavigationView.OnNaviga
 
 
                                     toast("Login Successful");
-                                    Intent intent = new Intent(login.this, CardListActivity.class);
+                                    Intent intent = new Intent(login.this, Location.class);
                                     startActivity(intent);
 
                                 }
@@ -126,6 +119,26 @@ public class login extends AppCompatActivity  implements NavigationView.OnNaviga
             toast(ex.getMessage());
         }
 
+    }
+
+    public void onSignUp(View view)
+    {
+
+        Intent in = new Intent(login.this,signUp.class);
+        startActivity(in);
+    }
+
+
+        public void toast(String t)
+    {
+        Toast output= Toast.makeText(this, t, Toast.LENGTH_SHORT);
+        output.setGravity(Gravity.CENTER,0,0);
+        output.show();
+    }
+
+    public void onLoginSaved(View view)
+    {
+      loginshared();
 
     }
 
@@ -161,12 +174,12 @@ public class login extends AppCompatActivity  implements NavigationView.OnNaviga
 
 
                                 toast("Login Successful");
-                                Intent intent = new Intent(login.this, CardListActivity.class);
+                                Intent intent = new Intent(login.this, Location.class);
                                 startActivity(intent);
 
                             }
 
-                            // ...
+
                         }
                     });
         }
@@ -222,4 +235,13 @@ public class login extends AppCompatActivity  implements NavigationView.OnNaviga
 
         return false;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.navbar, menu);
+        return true;
+    }
+
+
 }

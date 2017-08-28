@@ -1,10 +1,11 @@
 package am.dx.varsityspecials.www.varsityspecials;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -33,6 +34,7 @@ public class signUp extends AppCompatActivity {
     EditText em;
     EditText pa;
     EditText cpa;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +77,8 @@ public class signUp extends AppCompatActivity {
         }
     else {
             if (password.equals(cPassword)) {
-
+                progressDialog = ProgressDialog.show(this, "Please wait.",
+                        "Finding direction..!", true);
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -88,6 +91,7 @@ public class signUp extends AppCompatActivity {
                                 if (!task.isSuccessful()) {
                                     toast("Sign Up failed");
                                 } else {
+
                                     toast("Sign Up Successful");
                                     login = getSharedPreferences(prefName, MODE_PRIVATE);
                                     SharedPreferences.Editor editor = login.edit();
@@ -95,6 +99,12 @@ public class signUp extends AppCompatActivity {
                                     editor.putString("email", email);
                                     editor.putString("password", password);
                                     editor.apply();
+                                    try {
+                                        Thread.sleep(3000);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    progressDialog.dismiss();
                                     Intent in = new Intent(signUp.this, login.class);
                                     startActivity(in);
 

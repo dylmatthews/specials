@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +16,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -60,23 +63,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void showData(DataSnapshot dataSnapshot)  {
 
+
         cardArrayAdapter = new blod_array(getApplicationContext(), R.layout.blow_row);
         cardArrayAdapter.clear();
-        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-           final  String des = ds.child("desc").getValue().toString();
-           final String location = ds.child("title").getValue().toString();
-           final String imgURl = ds.child("image").getValue().toString();
+
+        Iterable<DataSnapshot> lstSnapshots =  dataSnapshot.getChildren();
+        ArrayList<DataSnapshot> lstDataSnapshots = new ArrayList<>();
+        for(DataSnapshot dataSnapshot1 : lstSnapshots){
+            lstDataSnapshots.add(dataSnapshot1);
+
+        }
+        Log.i("shitTest", lstDataSnapshots.size()+"");
+
+        for(int  i = lstDataSnapshots.size() - 1; i >= 0; i--){
+
+
+
+           final  String des = lstDataSnapshots.get(i).child("desc").getValue().toString();
+           final String location = lstDataSnapshots.get(i).child("title").getValue().toString();
+           final String imgURl = lstDataSnapshots.get(i).child("image").getValue().toString();
             final int num = 1;
 
 
-
+            Log.i("shitTesti", i+"");
                     Card card = new Card(location, des, imgURl, num);
                     cardArrayAdapter.add(card);
-                    listView.setAdapter(cardArrayAdapter);
+
 
 
 
         }
+
+        listView.setAdapter(cardArrayAdapter);
 
 
 
