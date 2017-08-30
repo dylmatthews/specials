@@ -96,8 +96,7 @@ title = (EditText) findViewById(R.id.NOP);
     public void startPosting() throws IOException
 
     {
-        pb.setMessage("Image is uploading...");
-        pb.show();
+
         final String titl= title.getText().toString();
         final String desc = des.getText().toString();
         StorageReference upload = storageReference.child("blog");
@@ -105,6 +104,8 @@ title = (EditText) findViewById(R.id.NOP);
         try {
 
             if (!titl.isEmpty() && !desc.isEmpty() && imageUri != null) {
+                pb.setMessage("Image is uploading...");
+                pb.show();
                 //String file = imageUri.toString();
                 Bitmap bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -160,6 +161,28 @@ title = (EditText) findViewById(R.id.NOP);
         {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
+        else if (id==R.id.nav_question1)
+        {
+            startActivity(new Intent(getApplicationContext(), Question1.class));
+
+        }
+        else if (id==R.id.nav_question1B)
+        {
+            startActivity(new Intent(getApplicationContext(), Question1B.class));
+        }
+        else if (id==R.id.nav_welcome)
+        {
+            startActivity(new Intent(getApplicationContext(), Welcome.class));
+        }
+        else if (id==R.id.nav_resetPassword)
+        {
+            startActivity(new Intent(getApplicationContext(), updatePassword.class));
+        }
+        else if (id==R.id.nav_deleteUser)
+        {
+            startActivity(new Intent(getApplicationContext(), DeleteUser.class));
+        }
+
         return false;
     }
 }

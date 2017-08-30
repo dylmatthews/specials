@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Specials031</string>
     <string name="title_activity_speicals_details">speicalsDetails</string>
+
+    <string name="title_activity_question2">Question 2</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

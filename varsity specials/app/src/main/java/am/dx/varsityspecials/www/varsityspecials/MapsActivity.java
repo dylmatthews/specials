@@ -16,7 +16,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.AppIndex;
@@ -36,11 +35,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import direction.DirectionFinder;
-import direction.DirectionFinderListener;
-import direction.Journey;
+import Journey.IJourneyFinderListener;
+import Journey.Journey;
+import Journey.JourneyFinder;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, DirectionFinderListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, IJourneyFinderListener {
 
     private GoogleMap mMap;
     private String destination = "30 Oxfrod drive durban north";
@@ -57,9 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String name = "";
     private LocationListener listener;
 
-    private Button btnFindPath;
-
-    private GoogleApiClient client;
+ private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,19 +71,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                     .findFragmentById(R.id.map);
             mapFragment.getMapAsync(this);
-            btnFindPath = (Button) findViewById(R.id.btnFindPath);
 
-
-            btnFindPath.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        sendRequest();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
 
 
             listener = new LocationListener() {
@@ -150,6 +135,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    public void onFindPath(View view)
+    {
+        try {
+            sendRequest();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void sendRequest() throws InterruptedException {
         // String origin = etOrigin.getText().toString();
@@ -198,7 +192,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         try {
-            new DirectionFinder(this, origin, destination).execute();
+            new JourneyFinder(this, origin, destination).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -226,7 +220,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //      .getBestProvider(criteria, false));
         // latitude = location.getLatitude();
         //longitude = location.getLongitude();
-        Toast.makeText(this, latitude + " , " + longitude, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, latitude + " , " + longitude, Toast.LENGTH_SHORT).show();
         LatLng hcmus = new LatLng(latitude, longitude);
         //  LatLng l = new LatLng(mMap.getMyLocation().getLatitude(),mMap.getMyLocation().getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(hcmus, 18));
@@ -295,6 +289,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onDirectionFinderSuccess(List<Journey> routes) {
+        //this code was taken ands adapted from https://github.com/hiepxuan2008/GoogleMapDirectionSimple/tree/master/app/src/main/java/Modules
+
         progressDialog.dismiss();
         polylinePaths = new ArrayList<>();
         originMarkers = new ArrayList<>();
@@ -308,16 +304,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             originMarkers.add(mMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_flag_black_24dp))
                     .title(journey.startAddress)
-                    .position(journey.startLocation)));
+                    .position(journey.startLocation))); //sets marker for start
             destinationMarkers.add(mMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_flag_black_24dp))
                     .title(journey.endAddress)
-                    .position(journey.endLocation)));
+                    .position(journey.endLocation))); //sets marker for end
 
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).
                     color(Color.BLACK).
-                    width(10);
+                    width(10); //sets colour of polyline
 
             for (int i = 0; i < journey.points.size(); i++)
                 polylineOptions.add(journey.points.get(i));

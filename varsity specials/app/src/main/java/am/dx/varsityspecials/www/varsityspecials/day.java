@@ -20,7 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class day extends AppCompatActivity {//implements NavigationView.OnNavigationItemSelectedListener {
+public class day extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef;
@@ -43,7 +43,8 @@ public class day extends AppCompatActivity {//implements NavigationView.OnNaviga
             listView = (ListView) findViewById(R.id.card_listView);
 
             navigationView = (NavigationView) findViewById(R.id.nav_view);
-           // navigationView.setNavigationItemSelectedListener(this);
+
+            navigationView.setNavigationItemSelectedListener(this);
             mAuth = FirebaseAuth.getInstance();
             //tv=(TextView) findViewById(R.id.line1);
             text= new String[10][10];
@@ -203,7 +204,6 @@ public class day extends AppCompatActivity {//implements NavigationView.OnNaviga
 
 
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         int id = item.getItemId();
 
         if (id==R.id.nav_login)
@@ -218,6 +218,28 @@ public class day extends AppCompatActivity {//implements NavigationView.OnNaviga
         {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
+        else if (id==R.id.nav_question1)
+        {
+            startActivity(new Intent(getApplicationContext(), Question1.class));
+
+        }
+        else if (id==R.id.nav_question1B)
+        {
+            startActivity(new Intent(getApplicationContext(), Question1B.class));
+        }
+        else if (id==R.id.nav_welcome)
+        {
+            startActivity(new Intent(getApplicationContext(), Welcome.class));
+        }
+        else if (id==R.id.nav_resetPassword)
+        {
+            startActivity(new Intent(getApplicationContext(), updatePassword.class));
+        }
+        else if (id==R.id.nav_deleteUser)
+        {
+            startActivity(new Intent(getApplicationContext(), DeleteUser.class));
+        }
+
         return false;
     }
 }

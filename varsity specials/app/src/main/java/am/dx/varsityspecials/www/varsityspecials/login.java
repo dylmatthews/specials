@@ -45,11 +45,7 @@ public class login extends AppCompatActivity  implements NavigationView.OnNaviga
             navigationView.setNavigationItemSelectedListener(this);
             mAuth = FirebaseAuth.getInstance();
             FirebaseCrash.log("Activity created");
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             if (FirebaseDatabase.getInstance() != null) {
                // toast("Gone online onResume Area");
                 toast("about to");
@@ -217,6 +213,7 @@ public class login extends AppCompatActivity  implements NavigationView.OnNaviga
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         if (id==R.id.nav_login)
@@ -231,6 +228,28 @@ public class login extends AppCompatActivity  implements NavigationView.OnNaviga
         {
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
         }
+        else if (id==R.id.nav_question1)
+        {
+            startActivity(new Intent(getApplicationContext(), Question1.class));
+
+        }
+        else if (id==R.id.nav_question1B)
+        {
+            startActivity(new Intent(getApplicationContext(), Question1B.class));
+        }
+        else if (id==R.id.nav_welcome)
+        {
+            startActivity(new Intent(getApplicationContext(), Welcome.class));
+        }
+        else if (id==R.id.nav_resetPassword)
+        {
+            startActivity(new Intent(getApplicationContext(), updatePassword.class));
+        }
+        else if (id==R.id.nav_deleteUser)
+        {
+            startActivity(new Intent(getApplicationContext(), DeleteUser.class));
+        }
+
 
 
         return false;

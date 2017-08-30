@@ -3,15 +3,18 @@ package am.dx.varsityspecials.www.varsityspecials;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +29,9 @@ public class ScrollingActivity extends AppCompatActivity {//implements Navigatio
     private String area="";
     private String day="";
     private  String time="";
+    private  String p ="";
+    private  String l = "";
+    private static final int RESULT_PICK_CONTACT = 5; //can be any number above 1
     private NavigationView navigationView;
     TextView tv;
 
@@ -45,6 +51,8 @@ public class ScrollingActivity extends AppCompatActivity {//implements Navigatio
        time = getIntent().getStringExtra("time");
         final String location = getIntent().getStringExtra("location");
         final String price =getIntent().getStringExtra("price");
+        p = price;
+        l = location;
         day = getIntent().getStringExtra("day");
         setTitle(name);
         tv.setText("The time for this special, for "+ name + " is " + time +"\nYou'll find " + name + " at\n " + location+ ".\n\nThe specials are :\n" + des +"\n\n\nCurrently the specials are submitted by users.\n\nIt is recommended that you phone the place before hand and ask if the special is still on.\n\nAlso to book a table");
@@ -64,7 +72,7 @@ public class ScrollingActivity extends AppCompatActivity {//implements Navigatio
                         try {
                             locationg();
                         } catch (Exception ex) {
-                            Toast.makeText(ScrollingActivity.this, "Accept the location permission to call", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ScrollingActivity.this, "Accept the Location permission", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -126,6 +134,108 @@ public class ScrollingActivity extends AppCompatActivity {//implements Navigatio
 
 
         });
+
+        FloatingActionButton sms = (FloatingActionButton) findViewById(R.id.sms);
+        sms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (isSMSPermissionGranted()) {
+                    sendSMS();
+                } else {
+                    try {
+                       // sendSMS();
+                    } catch (Exception ex) {
+                        Toast.makeText(ScrollingActivity.this, "Accept the sms permission to call", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+
+            }
+
+
+        });
+
+
+    }
+
+    private void sendSMS() {
+        Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+        startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+
+                    contactPicked(data);
+
+
+
+        } else {
+            Log.e("Scrolling", "Failed to pick contact");
+        }
+    }
+
+    private void contactPicked(Intent data) {
+        Cursor cursor = null;
+        try {
+            String phoneNo = null ;
+            String nam = null;
+            Uri uri = data.getData();
+            cursor = getContentResolver().query(uri, null, null, null, null);
+            cursor.moveToFirst();
+
+            int  number =cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+            phoneNo = cursor.getString(number);
+            if (phoneNo.contains("+27")) {
+
+            } else {
+                phoneNo = "+27" + phoneNo.substring(1);
+
+
+            }
+String mess = des + ".\nOn " + day+"\nAt " + name + ". \n\nTime: " + time +".\nThe location is " + l ;
+            Toast.makeText(this, "Length is " +mess.length(), Toast.LENGTH_SHORT).show();
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNo, null, mess , null, null);
+            Toast.makeText(this, "Sms has been sent", Toast.LENGTH_SHORT).show();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private boolean isSMSPermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(Manifest.permission.SEND_SMS)
+                    == PackageManager.PERMISSION_GRANTED) {
+                sendSMS();
+                Log.v("TAG","Permission is granted");
+                return true;
+            } else {
+
+                Log.v("TAG","Permission is revoked");
+                ActivityCompat.requestPermissions(ScrollingActivity.this, new String[]{Manifest.permission.SEND_SMS}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            Log.v("TAG","Permission is granted");
+            return true;
+        }
     }
 
     private boolean isLocationPermissionGranted() {

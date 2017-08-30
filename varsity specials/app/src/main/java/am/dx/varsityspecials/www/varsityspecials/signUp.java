@@ -77,8 +77,8 @@ public class signUp extends AppCompatActivity {
         }
     else {
             if (password.equals(cPassword)) {
-                progressDialog = ProgressDialog.show(this, "Please wait.",
-                        "Finding direction..!", true);
+               // progressDialog = ProgressDialog.show(this, "Please wait.",
+                 //       "Finding direction..!", true);
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -99,12 +99,8 @@ public class signUp extends AppCompatActivity {
                                     editor.putString("email", email);
                                     editor.putString("password", password);
                                     editor.apply();
-                                    try {
-                                        Thread.sleep(3000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                    progressDialog.dismiss();
+
+                                    //progressDialog.dismiss();
                                     Intent in = new Intent(signUp.this, login.class);
                                     startActivity(in);
 
