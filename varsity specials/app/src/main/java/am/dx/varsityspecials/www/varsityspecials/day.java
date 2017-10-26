@@ -52,7 +52,7 @@ public class day extends AppCompatActivity implements NavigationView.OnNavigatio
             category = getIntent().getStringExtra("category");
 
             area= getIntent().getStringExtra("area");
-            myRef = database.getReference(area +"/"+day +"/"+category );
+            myRef = database.getReference("regions/" + area +"/"+day +"/"+category );
             setTitle(category);
             listView.addHeaderView(new View(this));
             listView.addFooterView(new View(this));

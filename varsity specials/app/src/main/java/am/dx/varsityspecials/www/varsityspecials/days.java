@@ -38,7 +38,7 @@ public class days extends AppCompatActivity implements NavigationView.OnNavigati
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         navigationView.setNavigationItemSelectedListener(this);
-        myRef = database.getReference(area);
+        myRef = database.getReference("regions/" +area);
         setTitle(area);
         days = new String[10];
         listView.addHeaderView(new View(this));

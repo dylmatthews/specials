@@ -41,7 +41,7 @@ public class Category extends AppCompatActivity implements NavigationView.OnNavi
         navigationView.setNavigationItemSelectedListener(this);
         day = getIntent().getStringExtra("day");
         area = getIntent().getStringExtra("area");
-        myRef = database.getReference(area + "/" + day);
+        myRef = database.getReference("regions/"+area + "/" + day);
         setTitle(day.substring(1)+ " specials");
         listView.addHeaderView(new View(this));
         listView.addFooterView(new View(this));

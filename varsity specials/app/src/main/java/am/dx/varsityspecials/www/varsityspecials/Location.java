@@ -42,7 +42,7 @@ public class Location extends Activity  implements NavigationView.OnNavigationIt
        // super.onCreateDrawer();
         listView = (ListView) findViewById(R.id.card_listView);
         area = new String [10];
-        myRef = database.getReference();
+        myRef = database.getReference("regions");
         line = (TextView) findViewById(R.id.line1);
         listView.addHeaderView(new View(this));
         listView.addFooterView(new View(this));
